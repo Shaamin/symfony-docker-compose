@@ -1,0 +1,36 @@
+version: '3.7'
+
+services:
+
+  php-fpm:
+    build: ./php-fpm
+    volumes:
+      - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
+    ports:
+      - 9000:9000
+    working_dir: ${APP_PATH_CONTAINER}
+
+  nginx:
+    build: ./nginx
+    volumes:
+      - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./logs/project_error.log:/var/log/nginx/project_error.log
+      - ./logs/project_access.log:/var/log/nginx/project_access.log
+    ports:
+      - 8080:80
+    working_dir: ${APP_PATH_CONTAINER}
+
+  postgresql:
+    image: postgres:11.5
+    ports:
+      - '5432:5432'
+    working_dir: ${APP_PATH_CONTAINER}
+    restart: always
+    environment:
+      POSTGRES_DB: 'db_name'
+      POSTGRES_USER: 'db_user'
+      POSTGRES_PASSWORD: '123456'
+    volumes:
+      - ./data/dump:/app/dump
+      - ./data/postgresql:/var/lib/postgresql/data
