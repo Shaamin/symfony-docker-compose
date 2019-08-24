@@ -3,7 +3,7 @@ version: '3.7'
 services:
 
   php-fpm:
-    image: shaamin/php-fpm:1.0
+    image: shaamin/php-fpm:1.1
     volumes:
       - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
     ports:
